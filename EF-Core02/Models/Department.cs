@@ -12,8 +12,8 @@ namespace EF_Core02.Models
         public string Name { get; set; } = null!;
         public DateOnly HiringDate { get; set; }
 
-        public int InstructorId { get; set; }
-        public Instructor Instructor { get; set; } = null!;
+        public int? InstructorId { get; set; }
+        public Instructor? Instructor { get; set; } = null!;
 
         public ICollection<Student> Students { get; set; } = new List<Student>();
     }

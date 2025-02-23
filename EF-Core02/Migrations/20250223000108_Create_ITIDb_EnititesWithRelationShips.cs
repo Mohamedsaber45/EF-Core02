@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EF_Core02.Migrations
 {
     /// <inheritdoc />
-    public partial class create_ITIDb_WithRelationships : Migration
+    public partial class Create_ITIDb_EnititesWithRelationShips : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace EF_Core02.Migrations
                     Id = table.Column<int>(type: "int", nullable: false),
                     DepartmentName = table.Column<string>(type: "NVARCHAR(100)", nullable: false),
                     HiringDate = table.Column<DateOnly>(type: "Date", nullable: false, defaultValueSql: "GETDATE()"),
-                    InstructorId = table.Column<int>(type: "int", nullable: false)
+                    InstructorId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -47,7 +47,8 @@ namespace EF_Core02.Migrations
                     Salary = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Address = table.Column<string>(type: "NVARCHAR(200)", maxLength: 200, nullable: false),
                     HourRate = table.Column<double>(type: "float", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: false)
+                    DepartmentId = table.Column<int>(type: "int", nullable: false),
+                    HeadedDepartmentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,6 +59,11 @@ namespace EF_Core02.Migrations
                         principalTable: "Departments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Instructors_Departments_HeadedDepartmentId",
+                        column: x => x.HeadedDepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -166,6 +172,11 @@ namespace EF_Core02.Migrations
                 table: "Instructors",
                 column: "DepartmentId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Instructors_HeadedDepartmentId",
+                table: "Instructors",
+                column: "HeadedDepartmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_DepartmentId",

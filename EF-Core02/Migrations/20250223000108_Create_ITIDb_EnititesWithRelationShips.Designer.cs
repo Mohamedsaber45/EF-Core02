@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EF_Core02.Migrations
 {
     [DbContext(typeof(ITIDbContext))]
-    [Migration("20250222232909_create_ITIDb_WithRelationships")]
-    partial class create_ITIDb_WithRelationships
+    [Migration("20250223000108_Create_ITIDb_EnititesWithRelationShips")]
+    partial class Create_ITIDb_EnititesWithRelationShips
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,7 +82,7 @@ namespace EF_Core02.Migrations
                         .HasColumnType("Date")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<int>("InstructorId")
+                    b.Property<int?>("InstructorId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -111,6 +111,9 @@ namespace EF_Core02.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("HeadedDepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<double>("HourRate")
                         .HasColumnType("float")
                         .HasAnnotation("MaxValue", 12)
@@ -130,6 +133,8 @@ namespace EF_Core02.Migrations
 
                     b.HasIndex("DepartmentId")
                         .IsUnique();
+
+                    b.HasIndex("HeadedDepartmentId");
 
                     b.ToTable("Instructors");
                 });
@@ -238,7 +243,13 @@ namespace EF_Core02.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("EF_Core02.Models.Department", "HeadedDepartment")
+                        .WithMany()
+                        .HasForeignKey("HeadedDepartmentId");
+
                     b.Navigation("Department");
+
+                    b.Navigation("HeadedDepartment");
                 });
 
             modelBuilder.Entity("EF_Core02.Models.Student", b =>
@@ -280,8 +291,7 @@ namespace EF_Core02.Migrations
 
             modelBuilder.Entity("EF_Core02.Models.Department", b =>
                 {
-                    b.Navigation("Instructor")
-                        .IsRequired();
+                    b.Navigation("Instructor");
 
                     b.Navigation("Students");
                 });
